@@ -14,6 +14,7 @@ import re
 import subprocess
 import sys
 
+
 def _run_capture_output(*args, **kwargs):
     kwargs = dict(kwargs)
     kwargs['stdout'] = subprocess.PIPE
@@ -194,6 +195,7 @@ def call_vagrant(*args):
         raise
     return output
 
+
 def parse_test_by_filename(filename):
     lines = open(filename).read().split('\n')
     position_of_blank_line = lines.index('')
@@ -206,7 +208,8 @@ def parse_test_by_filename(filename):
 
 
 def run_one_test(filename):
-    parsed_headers, postconditions, cleanups, headers, test_script = parse_test_by_filename(filename)
+    parsed_headers, postconditions, cleanups, headers, test_script = parse_test_by_filename(
+        filename)
 
     # Make the VM etc., if necessary.
     handle_headers(parsed_headers)
@@ -234,7 +237,9 @@ def uninstall_sandstorm(vagrant_box_name):
             'sudo pkill -9 sandstorm || true',
             'sudo rm -rf /opt/sandstorm',
             'sudo rm -rf $HOME/sandstorm',
-            'if [ -e /proc/sys/kernel/unprivileged_userns_clone  ] ; then echo 0 | sudo dd of=/proc/sys/kernel/unprivileged_userns_clone ; fi',
+            (
+                'if [ -e /proc/sys/kernel/unprivileged_userns_clone  ] ; '
+                'then echo 0 | sudo dd of=/proc/sys/kernel/unprivileged_userns_clone ; fi'),
             'sudo pkill -9 sudo || true',
             'sudo hostname localhost',
             'sudo modprobe fuse',  # Workaround for issue #858
@@ -254,9 +259,9 @@ def handle_cleanups(parsed_headers, cleanups):
             raise
             print('Dazed and confused, but trying to continue.')
 
+
 def vagrant_up_or_resume(vm):
-    # First, try a resume.
-    needs_up = False
+    # First, try doing vagrant resume.
     try:
         output = call_vagrant('resume', vm)
         if 'VM not created. Moving on' in output:
@@ -274,26 +279,35 @@ def vagrant_up_or_resume(vm):
         print("Going to do vagrant up instead.")
         print(e)
 
+    # Then, always do "vagrant up", since it should be a no-up if the VM is already up, and if the
+    # VM isn't up, then we bring it up.
     output = call_vagrant('up', vm)
     return output
 
+
 def main():
     parser = argparse.ArgumentParser(description='Run Sandstorm install script tests.')
-    parser.add_argument('--rsync',
-                        help='Perform `vagrant rsync` to ensure the install.sh in the VM is current.',
-                        action='store_true',
+    parser.add_argument(
+        '--rsync',
+        help='Perform `vagrant rsync` to ensure install.sh in the VM is current.',
+        action='store_true',
     )
-    parser.add_argument('--uninstall-first',
-                        help='Before running tests, uninstall Sandstorm within the VMs.',
-                        action='store_true',
+    parser.add_argument(
+        '--uninstall-first',
+        help='Before running tests, uninstall Sandstorm within the VMs.',
+        action='store_true',
     )
-    parser.add_argument('--halt-afterward',
-                        help='After running the tests, stop the VMs.',
-                        action='store_true',
+    parser.add_argument(
+        '--halt-afterward',
+        help='After running the tests, stop the VMs.',
+        action='store_true',
     )
-    parser.add_argument('testfiles', metavar='testfile', nargs='*',
-                        help='A *.t file to run (multiple is OK; empty testfile sequence means run all)',
-                        default=[],
+    parser.add_argument(
+        'testfiles',
+        metavar='testfile',
+        nargs='*',
+        help='A *.t file to run (multiple is OK; empty testfile sequence means run all)',
+        default=[],
     )
 
     args = parser.parse_args()
@@ -354,7 +368,7 @@ def main():
         subprocess.check_output(
             ['vagrant', 'halt'],
             cwd=TEST_ROOT,
-    )
+        )
 
     if not keep_going:
         sys.exit(1)
