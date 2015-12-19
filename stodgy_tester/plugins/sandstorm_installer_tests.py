@@ -24,7 +24,8 @@ def uninstall_sandstorm(box):
 
 
 def sandstorm_not_installed(box):
-    stodgy_tester.helpers.print_info('** Making sure Sandstorm not currently installed on', box._name)
+    stodgy_tester.helpers.print_info(
+        '** Making sure Sandstorm not currently installed on', box._name)
     shell_command_list = [
         'if [ -e ~/sandstorm ] ; then exit 1 ; fi',
         'if [ -e /opt/sandstorm ] ; then exit 1 ; fi',

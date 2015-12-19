@@ -39,18 +39,18 @@ def _expect(line, current_cmd, do_re_escape=True, do_detect_slow=True,
     if do_detect_slow:
         slow_token = '$[slow]'
         if line.startswith(slow_token):
-            helpers.print_info('Slow line...')
+            stodgy_tester.helpers.print_info('Slow line...')
             timeout = slow_text_timeout
             line = line.replace(slow_token, '', 1)
 
         veryslow_token = '$[veryslow]'
         if line.startswith(veryslow_token):
-            helpers.print_info('Very slow line...')
+            stodgy_tester.helpers.print_info('Very slow line...')
             timeout = veryslow_text_timeout
             line = line.replace(veryslow_token, '', 1)
 
     if verbose:
-        helpers.print_info('expecting', line)
+        stodgy_tester.helpers.print_info('expecting', line)
 
     if do_re_escape:
         line = re.escape(line)
@@ -58,7 +58,7 @@ def _expect(line, current_cmd, do_re_escape=True, do_detect_slow=True,
     current_cmd.expect(line, timeout=timeout)
 
 
-RUNNER = helpers.CommandRunner(default_cwd=os.getcwd(), extra_env={
+RUNNER = stodgy_tester.helpers.CommandRunner(default_cwd=os.getcwd(), extra_env={
     'VAGRANT_DEFAULT_PROVIDER': 'libvirt'
 })
 
@@ -71,7 +71,7 @@ def handle_test_script(vagrant_box_name, lines):
         if line.startswith('$[run]'):
             arg = line.replace('$[run]', '')
             arg = 'vagrant ssh ' + vagrant_box_name + ' -c "' + arg + '"'
-            helpers.print_info('$', arg)
+            stodgy_tester.helpers.print_info('$', arg)
             current_cmd = pexpect.spawn(arg, cwd=os.getcwd())
         elif '$[exitcode]' in line:
             left, right = map(lambda s: s.strip(), line.split('$[exitcode]'))
@@ -140,7 +140,7 @@ def parse_test_file(headers_list):
 
 def handle_headers(parsed_headers):
     vagrant_box_name = parsed_headers['vagrant-box']
-    vm = helpers.VirtualMachine(name=vagrant_box_name, command_runner=RUNNER)
+    vm = stodgy_tester.helpers.VirtualMachine(name=vagrant_box_name, command_runner=RUNNER)
 
     # Bring up VM, if needed.
     vm.up_or_resume_if_needed()
@@ -154,9 +154,9 @@ def handle_headers(parsed_headers):
             except:
                 succeeded = True
             if not succeeded:
-                helpers.print_progress('Destroying this VM...')
+                stodgy_tester.helpers.print_progress('Destroying this VM...')
                 vm.destroy()
-                helpers.print_info('Recreating as needed...')
+                stodgy_tester.helpers.print_info('Recreating as needed...')
                 vm.up_or_resume()
 
     values = parsed_headers.get('precondition')
@@ -189,16 +189,16 @@ def run_one_test(filename, box):
 
     # Make the VM etc., if necessary.
     handle_headers(parsed_headers)
-    helpers.print_progress("*** Running test from file:", filename)
-    helpers.print_info(" -> Extra info:", repr(headers))
+    stodgy_tester.helpers.print_progress("*** Running test from file:", filename)
+    stodgy_tester.helpers.print_info(" -> Extra info:", repr(headers))
 
     # Run the test script, using pexpect to track its output.
     try:
         handle_test_script(parsed_headers['vagrant-box'], test_script)
     except Exception as e:
-        helpers.print_error(str(e))
+        stodgy_tester.helpers.print_error(str(e))
         raise
-        helpers.print_warn('Dazed and confused, but trying to continue.')
+        stodgy_tester.helpers.print_warn('Dazed and confused, but trying to continue.')
 
     # Run any sanity-checks in the test script, as needed.
     handle_postconditions(postconditions)
@@ -210,11 +210,11 @@ def run_one_test(filename, box):
 
 def handle_cleanups(parsed_headers, cleanups, box):
     for key, value in cleanups:
-        helpers.print_info('Doing cleanup task', value)
+        stodgy_tester.helpers.print_info('Doing cleanup task', value)
         try:
             getattr(plugin, value)(box)
         except Exception as e:
-            helpers.print_error('Ran into error', str(e))
+            stodgy_tester.helpers.print_error('Ran into error', str(e))
             raise
 
 
@@ -222,7 +222,7 @@ def import_plugin(plugin_name):
     try:
         return importlib.import_module(plugin_name)
     except ImportError:
-        helpers.print_error("You provided a plugin named", plugin_name,
+        stodgy_tester.helpers.print_error("You provided a plugin named", plugin_name,
                             "but I cannot seem to import it. Exception details follow.")
         raise
 
@@ -283,7 +283,7 @@ def main():
                 else:
                     box.suspend()
 
-            box = helpers.VirtualMachine(name=this_vagrant_box_name,
+            box = stodgy_tester.helpers.VirtualMachine(name=this_vagrant_box_name,
                                          command_runner=RUNNER)
             boxes_by_name[this_vagrant_box_name] = box
         else:
@@ -295,7 +295,7 @@ def main():
                 getattr(plugin, args.on_vm_start)(box)
             # Same with rsyncing.
             if args.rsync:
-                helpers.print_info('** rsync-ing the latest Sandstorm installer etc. to',
+                stodgy_tester.helpers.print_info('** rsync-ing the latest Sandstorm installer etc. to',
                                    this_vagrant_box_name)
                 box.rsync()
                 # Indicate that no further prep is needed.
