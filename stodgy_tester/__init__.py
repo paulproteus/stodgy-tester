@@ -13,7 +13,7 @@ import random
 import re
 import subprocess
 import sys
-import helpers
+import stodgy_tester.helpers
 
 plugin = None
 

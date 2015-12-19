@@ -1,12 +1,12 @@
 import unittest
-import helpers
+import stodgy_tester.helpers
 import os
 
 
 class TestRunner(unittest.TestCase):
     def setUp(self):
         if getattr(self, '_runner', None) is None:
-            self._runner = helpers.CommandRunner(default_cwd=os.getcwd(), print_cmd=False)
+            self._runner = stodgy_tester.helpers.CommandRunner(default_cwd=os.getcwd(), print_cmd=False)
 
     def test_runner_captures_output(self):
         got = self._runner(['/bin/echo', '1']).strip()
