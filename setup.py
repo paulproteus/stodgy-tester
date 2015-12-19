@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 
-from setuptools import setup
+from setuptools import setup, find_packages
 
 DESCRIPTION = ('Run command line test suites in a virtual machines, '
                'with the help of Vagrant and qemu.')
@@ -20,5 +20,5 @@ setup(
             'stodgy-tester = stodgy_tester:main',
         ],
     },
-    packages={'stodgy_tester': 'stodgy_tester'},
+    packages=find_packages(),
 )
