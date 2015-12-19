@@ -6,6 +6,8 @@ tests.
 
 stodgy-tester is not fazed by having to operate at many levels of abstraction at once.
 
+[![Build Status](https://travis-ci.org/paulproteus/stodgy-tester.svg?branch=master)](https://travis-ci.org/paulproteus/stodgy-tester)
+
 ### Origin
 
 stodgy-tester originated as a tool to test the [Sandstorm.io](https://sandstorm.io/) install
