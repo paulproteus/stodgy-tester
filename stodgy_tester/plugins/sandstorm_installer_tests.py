@@ -3,11 +3,11 @@ from __future__ import (
     print_function,
     absolute_import,
 )
-import helpers
+import stodgy_tester.helpers
 
 
 def uninstall_sandstorm(box):
-    helpers.print_info('** Uninstalling Sandstorm from', box._name)
+    stodgy_tester.helpers.print_info('** Uninstalling Sandstorm from', box._name)
     shell_command_list = [
         'sudo pkill -9 sandstorm || true',
         'sudo rm -rf /opt/sandstorm',
@@ -24,7 +24,7 @@ def uninstall_sandstorm(box):
 
 
 def sandstorm_not_installed(box):
-    helpers.print_info('** Making sure Sandstorm not currently installed on', box._name)
+    stodgy_tester.helpers.print_info('** Making sure Sandstorm not currently installed on', box._name)
     shell_command_list = [
         'if [ -e ~/sandstorm ] ; then exit 1 ; fi',
         'if [ -e /opt/sandstorm ] ; then exit 1 ; fi',
