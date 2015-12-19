@@ -222,8 +222,9 @@ def import_plugin(plugin_name):
     try:
         return importlib.import_module(plugin_name)
     except ImportError:
-        stodgy_tester.helpers.print_error("You provided a plugin named", plugin_name,
-                            "but I cannot seem to import it. Exception details follow.")
+        stodgy_tester.helpers.print_error(
+            "You provided a plugin named", plugin_name,
+            "but I cannot seem to import it. Exception details follow.")
         raise
 
 
@@ -295,8 +296,10 @@ def main():
                 getattr(plugin, args.on_vm_start)(box)
             # Same with rsyncing.
             if args.rsync:
-                stodgy_tester.helpers.print_info('** rsync-ing the latest Sandstorm installer etc. to',
-                                   this_vagrant_box_name)
+                stodgy_tester.helpers.print_info(
+                    '** rsync-ing the latest Sandstorm installer etc. to',
+                    this_vagrant_box_name,
+                )
                 box.rsync()
                 # Indicate that no further prep is needed.
                 boxes_that_have_been_prepared[this_vagrant_box_name] = True
