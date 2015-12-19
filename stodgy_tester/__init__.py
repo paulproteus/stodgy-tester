@@ -284,8 +284,10 @@ def main():
                 else:
                     box.suspend()
 
-            box = stodgy_tester.helpers.VirtualMachine(name=this_vagrant_box_name,
-                                         command_runner=RUNNER)
+            box = stodgy_tester.helpers.VirtualMachine(
+                name=this_vagrant_box_name,
+                command_runner=RUNNER,
+            )
             boxes_by_name[this_vagrant_box_name] = box
         else:
             box = boxes_by_name[this_vagrant_box_name]
