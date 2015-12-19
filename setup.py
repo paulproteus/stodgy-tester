@@ -20,5 +20,5 @@ setup(
             'stodgy-tester = stodgy_tester:main',
         ],
     },
-    packages={'': '.'},
+    packages={'stodgy_tester': 'stodgy_tester'},
 )
