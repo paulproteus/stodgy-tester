@@ -62,6 +62,11 @@ pip install --user --editable .
 
 One day it'll be installable from PyPI, but it's not yet.
 
+### Copyright & license
+
+This program is (C) Sandstorm Development Group, Inc. Re-use permitted under the terms of Apache
+License 2.0.
+
 ### Common problems
 
 A quick bullet things of things to know:
