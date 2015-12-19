@@ -1,8 +1,11 @@
 language: python
 python:
   - "2.7"
-# command to install dependencies
+before_install:
+  - pip install flake8
 install:
   - pip install --editable .
-# command to run tests
-script: python tests/test_helpers.py
+before_script:
+  - flake8 stodgy_tester
+script:
+  - python tests/test_helpers.py
