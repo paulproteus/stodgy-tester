@@ -183,7 +183,7 @@ def parse_test_by_filename(filename):
     return parsed_headers, postconditions, cleanups, headers, test_script
 
 
-def run_one_test(filename, box):
+def run_one_test(filename, box, do_cleanup):
     parsed_headers, postconditions, cleanups, headers, test_script = parse_test_by_filename(
         filename)
 
@@ -205,7 +205,10 @@ def run_one_test(filename, box):
 
     # If the test knows it needs to do some cleanup, e.g. destroying
     # its VM, then do so.
-    handle_cleanups(parsed_headers, cleanups, box)
+    if do_cleanup:
+        handle_cleanups(parsed_headers, cleanups, box)
+    else:
+        stodgy_tester.helpers.print_info('Skipping cleanup.')
 
 
 def handle_cleanups(parsed_headers, cleanups, box):
@@ -252,7 +255,14 @@ def main():
         help='A *.t file to run (multiple is OK; empty testfile sequence means run all)',
         default=[],
     )
-
+    do_cleanup_parser = parser.add_mutually_exclusive_group(required=False)
+    do_cleanup_parser.add_argument(
+        '--do-cleanup', dest='do_cleanup', action='store_true',
+        help='After running each test, run its cleanup function (true by default)')
+    do_cleanup_parser.add_argument(
+        '--no-do-cleanup', dest='do_cleanup', action='store_false',
+        help='Skip running cleanup functions when running tests')
+    do_cleanup_parser.set_defaults(do_cleanup=True)
     args = parser.parse_args()
     # HACK
     global plugin
@@ -307,7 +317,7 @@ def main():
                 boxes_that_have_been_prepared[this_vagrant_box_name] = True
         try:
             if keep_going:
-                run_one_test(filename, box)
+                run_one_test(filename, box, args.do_cleanup)
         except:
             keep_going = False
             logging.exception("Alas! A test failed!")
