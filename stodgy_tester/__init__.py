@@ -256,10 +256,12 @@ def main():
         default=[],
     )
     do_cleanup_parser = parser.add_mutually_exclusive_group(required=False)
-    do_cleanup_parser.add_argument('--do-cleanup', dest='do_cleanup', action='store_true',
-                                help='After running each test, run its cleanup function (true by default)')
-    do_cleanup_parser.add_argument('--no-do-cleanup', dest='do_cleanup', action='store_false',
-                                help='Skip running cleanup functions when running tests')
+    do_cleanup_parser.add_argument(
+        '--do-cleanup', dest='do_cleanup', action='store_true',
+        help='After running each test, run its cleanup function (true by default)')
+    do_cleanup_parser.add_argument(
+        '--no-do-cleanup', dest='do_cleanup', action='store_false',
+        help='Skip running cleanup functions when running tests')
     do_cleanup_parser.set_defaults(do_cleanup=True)
     args = parser.parse_args()
     # HACK
