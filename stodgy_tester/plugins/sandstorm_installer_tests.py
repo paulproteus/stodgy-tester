@@ -10,6 +10,7 @@ def uninstall_sandstorm(box):
     stodgy_tester.helpers.print_info('** Uninstalling Sandstorm from', box._name)
     shell_command_list = [
         'sudo pkill -9 sandstorm || true',
+        'sudo chattr -i /usr/local/bin',
         'sudo rm -rf /opt/sandstorm',
         'sudo rm -rf $HOME/sandstorm',
         (
