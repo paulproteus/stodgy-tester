@@ -104,7 +104,7 @@ def parse_test_file(headers_list):
     parsed_headers = {}
 
     for header in headers_list:
-        key, value = map(lambda s: s.strip(), header.split(':'))
+        key, value = map(lambda s: s.strip(), header.split(':', 1))
         key = key.lower()
 
         if key == 'vagrant-box':
