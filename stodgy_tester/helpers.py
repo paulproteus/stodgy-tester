@@ -18,6 +18,8 @@ def _make_colored_printer(color):
             for arg in args:
                 if type(arg) is str:
                     unicode_args.append(arg.decode('utf-8'))
+                elif isinstance(arg, Exception):
+                    unicode_args.append(unicode(arg))
                 else:
                     unicode_args.append(arg)
             return print(color(u' '.join(unicode_args)), **kwargs)
