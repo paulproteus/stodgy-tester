@@ -11,6 +11,7 @@ def uninstall_sandstorm(box):
     shell_command_list = [
         'sudo pkill -9 sandstorm || true',
         'sudo chattr -i /usr/local/bin',
+        'for i in `seq 0 50` ; do if pgrep sandstorm  >/dev/null ; then sleep 0.1 ; fi ; done',
         'sudo rm -rf /opt/sandstorm',
         'sudo rm -rf $HOME/sandstorm',
         (
