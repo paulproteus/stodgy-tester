@@ -9,6 +9,8 @@ import stodgy_tester.helpers
 def uninstall_sandstorm(box):
     stodgy_tester.helpers.print_info('** Uninstalling Sandstorm from', box._name)
     shell_command_list = [
+        'sudo umount /opt/sandstorm/sandstorm-*/proc || true',
+        'sudo umount /opt/sandstorm/sandstorm-*/run.host || true',
         'sudo pkill -9 sandstorm || true',
         'sudo chattr -i /usr/local/bin',
         'sudo rm -rf /opt/sandstorm',
