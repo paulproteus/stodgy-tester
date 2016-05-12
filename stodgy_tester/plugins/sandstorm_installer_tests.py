@@ -14,6 +14,7 @@ def uninstall_sandstorm(box):
         'for i in `seq 0 50` ; do if pgrep sandstorm  >/dev/null ; then sleep 0.1 ; fi ; done',
         'sudo rm -rf /opt/sandstorm',
         'sudo rm -rf $HOME/sandstorm',
+        'sudo rm -f /etc/sysctl.d/50-sandstorm.conf',
         (
             'if [ -e /proc/sys/kernel/unprivileged_userns_clone  ] ; '
             'then echo 0 | sudo dd of=/proc/sys/kernel/unprivileged_userns_clone ; fi'),
