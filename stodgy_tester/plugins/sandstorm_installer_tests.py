@@ -15,6 +15,8 @@ def uninstall_sandstorm(box):
         'sudo rm -rf /opt/sandstorm',
         'sudo rm -rf $HOME/sandstorm',
         'sudo rm -f /etc/sysctl.d/50-sandstorm.conf',
+        # Remove any bind-mounting of /proc/sys, if present.
+        'if mount | grep -q /proc/sys" " ; then sudo umount /proc/sys ; fi',
         (
             'if [ -e /proc/sys/kernel/unprivileged_userns_clone  ] ; '
             'then echo 0 | sudo dd of=/proc/sys/kernel/unprivileged_userns_clone ; fi'),
