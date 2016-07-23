@@ -88,10 +88,10 @@ class CommandRunner(object):
                 if line:
                     print_info(line)
         status = p.wait()
-        stderr = p.communicate()[1]
+        stderr = p.communicate()[1].decode('utf-8', 'replace')
         self._print_cmd_end(printed_length, started_time)
         if status != 0:
-            raise_me = Exception("Subprocess failed: argv=%s, stderr=%s" % (argv, stderr))
+            raise_me = Exception(u"Subprocess failed: argv=%s, stderr=%s" % (argv, stderr))
             raise_me.status = status
             raise_me.output = output
             raise_me.stderr = stderr
