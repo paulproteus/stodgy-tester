@@ -14,6 +14,7 @@ def uninstall_sandstorm(box):
         'for i in `seq 0 50` ; do if pgrep sandstorm  >/dev/null ; then sleep 0.1 ; fi ; done',
         'sudo rm -rf /opt/sandstorm',
         'sudo rm -rf $HOME/sandstorm',
+        'sudo apt-get -y remove --purge postfix',
         'sudo rm -f /etc/sysctl.d/50-sandstorm.conf',
         # Remove any bind-mounting of /proc/sys, if present.
         'if mount | grep -q /proc/sys" " ; then sudo umount /proc/sys ; fi',
