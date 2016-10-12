@@ -16,6 +16,7 @@ def uninstall_sandstorm(box):
         'sudo rm -rf $HOME/sandstorm',
         'sudo rm -f /etc/sysctl.d/50-sandstorm.conf',
         'sudo rm -f /usr/sbin/policy-rc.d',
+        'if [ -e /usr/share/doc/postfix/changelog.Debian.gz ] ; then sudo apt-get -y purge postfix ; fi',
         # Remove any bind-mounting of /proc/sys, if present.
         'if mount | grep -q /proc/sys" " ; then sudo umount /proc/sys ; fi',
         (
@@ -27,11 +28,6 @@ def uninstall_sandstorm(box):
     ]
     as_text = ' && '.join([('( ' + x + ' )') for x in shell_command_list])
     box.run_command_within_vm(as_text)
-
-
-def uninstall_sandstorm_and_postfix(box):
-    uninstall_sandstorm(box)
-    box.run_command_within_vm('sudo apt-get -y purge postfix')
 
 
 def sandstorm_not_installed(box):
