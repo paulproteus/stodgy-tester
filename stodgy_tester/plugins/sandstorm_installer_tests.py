@@ -14,7 +14,6 @@ def uninstall_sandstorm(box):
         'for i in `seq 0 50` ; do if pgrep sandstorm  >/dev/null ; then sleep 0.1 ; fi ; done',
         'sudo rm -rf /opt/sandstorm',
         'sudo rm -rf $HOME/sandstorm',
-        'sudo apt-get -y purge postfix',
         'sudo rm -f /etc/sysctl.d/50-sandstorm.conf',
         'sudo rm -f /usr/sbin/policy-rc.d',
         # Remove any bind-mounting of /proc/sys, if present.
@@ -30,12 +29,24 @@ def uninstall_sandstorm(box):
     box.run_command_within_vm(as_text)
 
 
+def uninstall_sandstorm_and_postfix(box):
+    uninstall_sandstorm(box)
+    box.run_command_within_vm('sudo apt-get -y purge postfix')
+
+
 def sandstorm_not_installed(box):
     stodgy_tester.helpers.print_info(
         '** Making sure Sandstorm not currently installed on', box._name)
     shell_command_list = [
         'if [ -e ~/sandstorm ] ; then exit 1 ; fi',
         'if [ -e /opt/sandstorm ] ; then exit 1 ; fi',
+    ]
+    as_text = ' && '.join([('( ' + x + ' )') for x in shell_command_list])
+    box.run_command_within_vm(as_text)
+    stodgy_tester.helpers.print_info(
+        '** Making sure Postfix not currently installed on', box._name)
+    shell_command_list = [
+        'if [ -e /etc/postfix/main.cf ] ; then exit 1 ; fi',
     ]
     as_text = ' && '.join([('( ' + x + ' )') for x in shell_command_list])
     box.run_command_within_vm(as_text)
