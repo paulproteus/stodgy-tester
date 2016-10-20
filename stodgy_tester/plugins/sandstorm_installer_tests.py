@@ -17,6 +17,7 @@ def uninstall_sandstorm(box):
         'sudo rm -f /etc/sysctl.d/50-sandstorm.conf',
         'sudo rm -f /usr/sbin/policy-rc.d',
         'if [ -e /usr/share/doc/postfix/changelog.Debian.gz ] ; then sudo apt-get -y purge postfix ; fi',
+        'if [ -e /usr/bin/rpm ] ; then if [ -e /usr/share/doc/postfix-* ] ; then sudo rpm -e postfix ; fi ; fi',
         # Remove any bind-mounting of /proc/sys, if present.
         'if mount | grep -q /proc/sys" " ; then sudo umount /proc/sys ; fi',
         (
